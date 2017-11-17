@@ -14,14 +14,13 @@
 - name: Hosts | populate kubernetes loadbalancer address into hosts file
   lineinfile:
     dest: /etc/hosts
-    regexp: ".*{{ apiserver_loadbalancer_domain_name }}$"
+    regexp: ".*{{ apiserver_loadbalancer_domain_name | default('lb-apiserver.kubernetes.local') }}$"
     line: "{{ loadbalancer_apiserver.address }} {{ apiserver_loadbalancer_domain_name| default('lb-apiserver.kubernetes.local') }}"
     state: present
     backup: yes
   when:
     - loadbalancer_apiserver is defined
     - loadbalancer_apiserver.address is defined
-    - apiserver_loadbalancer_domain_name is defined
 
 - name: Hosts | localhost ipv4 in hosts file
   lineinfile:
